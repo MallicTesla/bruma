@@ -1,34 +1,24 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "l10n_uy_direccion_por_defecto",
+    'name': "Dirección por Defecto para Consulta RUT",
+    'version': '17.0.1.0.0',
 
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
+    'summary': "Utiliza un valor por defecto en la consulta RUT en caso de error en la Conexión CFE",
+    'category': 'Localización/Uruguay',
 
-    'description': """
-Long description of module's purpose
-    """,
+    'author': 'PrimateUY',
+    'website': 'https://primate.uy',
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'depends': ['l10n_uy_vat_query'],
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        'security/ir.model.access.csv',
+        'views/vista_res_company.xml',
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+
 }
 
