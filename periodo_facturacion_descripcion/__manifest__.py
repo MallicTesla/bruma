@@ -1,34 +1,31 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "periodo_facturacion_descripcion",
+    'name': "Período de facturación en descripción",
 
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
+    'summary': "Incluye en la descripción de la suscripción el nombre de la Plantilla de cotización y el Plan recurrente.",
 
     'description': """
-Long description of module's purpose
+Este módulo añade un campo booleano en el plan de suscripción que, de estar activo,
+se agregará en la sección de "Notas o Descripción" de la suscripción el siguiente texto:
+    {Nombre de la Plantilla de cotización} - {Plan recurrente}
+Por ejemplo: "Plan Básico - Mensualmente".
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'version': '17.0.1.0.0',
+    'category': 'Ventas',
+    'author': 'PrimateUY',
+    'website': 'https://primate.uy',
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['sale_subscription', 'sale_management'],
 
-    # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        'views/sale_subscription_plan_view.xml',
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+
+    'installable': True,
+    'application': False
+
 }
 
