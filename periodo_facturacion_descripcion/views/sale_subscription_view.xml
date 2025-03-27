@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vista heredada para agregar el checkbox en el formulario -->
+    <record id="inherit_sale_subscription_form" model="ir.ui.view">
+        <field name="name">sale.subscription.form.inherit</field>
+        <field name="model">sale.order</field>
+        <!-- Asegúrate de que este external id sea el correcto para el formulario que quieres modificar -->
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_order_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Ubica el nuevo campo después del campo sale_order_template_id -->
+            <xpath expr="//field[@name='sale_order_template_id']" position="after">
+                <field name="incluir_temporalidad" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+
+
+

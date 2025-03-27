@@ -17,15 +17,13 @@ Por ejemplo: "Plan Básico - Mensualmente".
     'website': 'https://primate.uy',
 
 
-    'depends': ['sale_subscription', 'sale_management'],
+    'depends': ['sale', 'sale_subscription',],
 
     'data': [
-        # 'security/ir.model.access.csv',
-        'views/sale_subscription_plan_view.xml',
+        'views/sale_subscription_view.xml',
     ],
 
     'installable': True,
-    'application': False
-
+    'application': False,
 }
 
