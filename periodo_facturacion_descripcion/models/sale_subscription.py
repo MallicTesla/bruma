@@ -1,73 +1,81 @@
 from odoo import models, fields, api
-import logging
 import re
 
-_logger = logging.getLogger(__name__)
-
-class SaleSubscription(models.Model):
+class SuscripcionVenta(models.Model):
     _inherit = 'sale.order'
 
+    # Campo booleano para decidir si incluir la temporalidad en las notas
     incluir_temporalidad = fields.Boolean(string="Incluir temporalidad en notas")
 
-    # Marcadores para identificar nuestro bloque en internal_note
-    FACT_MARKER_START = "<!-- FACTURACION_START -->"
-    FACT_MARKER_END = "<!-- FACTURACION_END -->"
+    # Marcadores para identificar nuestro bloque de facturación dentro de internal_note
+    MARCADOR_FACTURACION_INICIO = "<!-- FACTURACION_START -->"
+    MARCADOR_FACTURACION_FIN = "<!-- FACTURACION_END -->"
 
-    def _update_internal_note_with_facturacion(self):
+    def _actualizar_nota_interna_con_facturacion(self):
         """
         Actualiza el campo internal_note conservando el contenido manual,
         y añadiendo (o removiendo) la información de facturación en un bloque marcado.
         """
         # Obtenemos la nota actual; si es None, se convierte en cadena vacía
-        current_note = self.internal_note or ""
-        # Eliminamos cualquier bloque previamente agregado con nuestros marcadores
-        pattern = re.compile(
-            re.escape(self.FACT_MARKER_START) + ".*?" + re.escape(self.FACT_MARKER_END),
+        nota_actual = self.internal_note or ""
+
+        # Eliminamos cualquier bloque previamente agregado con nuestros marcadores de facturación
+        patron = re.compile(
+            re.escape(self.MARCADOR_FACTURACION_INICIO) + ".*?" + re.escape(self.MARCADOR_FACTURACION_FIN),
             re.DOTALL
         )
-        cleaned_note = pattern.sub("", current_note).strip()
+        nota_limpia = patron.sub("", nota_actual).strip()
+
+        # Si se debe incluir la temporalidad, generamos el bloque de facturación
         if self.incluir_temporalidad:
-            plantilla = self.sale_order_template_id.name or ''
-            plan = self.plan_id.name or ''
-            concatenated = f"{plantilla} - {plan}"
-            fact_block = f"{self.FACT_MARKER_START}{concatenated}{self.FACT_MARKER_END}"
-            # Si hay texto manual, se concatena; de lo contrario, solo el bloque
-            if cleaned_note:
-                new_note = f"{cleaned_note}\n{fact_block}"
+            plantilla = self.sale_order_template_id.name or ''  # Nombre de la plantilla de la orden
+            plan = self.plan_id.name or ''                      # Nombre del plan de suscripción
+            concatenado = f"{plantilla} - {plan}"               # Concatenamos ambos para formar la descripción
+            bloque_facturacion = f"{self.MARCADOR_FACTURACION_INICIO}{concatenado}{self.MARCADOR_FACTURACION_FIN}"
+            
+            # Si ya hay contenido en la nota, concatenamos el bloque de facturación al final
+            if nota_limpia:
+                nueva_nota = f"{nota_limpia}\n{bloque_facturacion}"
+
             else:
-                new_note = fact_block
+                nueva_nota = bloque_facturacion  # Si no hay contenido, solo se coloca el bloque
+
         else:
-            new_note = cleaned_note
-        return new_note
+            nueva_nota = nota_limpia  # Si no se debe incluir la temporalidad, devolvemos solo la nota limpia
+
+        return nueva_nota
 
     @api.onchange('incluir_temporalidad', 'sale_order_template_id', 'plan_id')
     def _onchange_incluir_temporalidad(self):
-        _logger.info(">>> Se llamó a _onchange_incluir_temporalidad")
-        new_note = self._update_internal_note_with_facturacion()
-        self.internal_note = new_note
-        _logger.info(">>> Nota actualizada en onchange: %s", new_note)
+        """
+        Se activa cuando cambia alguno de los campos relacionados con la temporalidad.
+        Actualiza la nota interna con el nuevo valor de facturación si es necesario.
+        """
+        nueva_nota = self._actualizar_nota_interna_con_facturacion()
+        self.internal_note = nueva_nota  # Actualizamos la nota interna con la nueva información
 
     def write(self, vals):
-        result = super(SaleSubscription, self).write(vals)
-        # Si se modificó alguno de los campos de interés, actualizamos la nota
-        fields_of_interest = {'incluir_temporalidad', 'sale_order_template_id', 'plan_id'}
-        if any(f in vals for f in fields_of_interest):
+        """
+        Sobrescribe el método write para actualizar la nota interna si se modifican los campos de interés.
+        """
+        resultado = super(SuscripcionVenta, self).write(vals)
+        
+        # Comprobamos si alguno de los campos de interés ha sido modificado
+        campos_de_interes = {'incluir_temporalidad', 'sale_order_template_id', 'plan_id'}
+        if any(f in vals for f in campos_de_interes):
             for rec in self:
-                new_note = rec._update_internal_note_with_facturacion()
-                # Usamos una bandera en el contexto para evitar recursión
-                rec.with_context(skip_internal_note_update=True).write({'internal_note': new_note})
-        return result
+                nueva_nota = rec._actualizar_nota_interna_con_facturacion()
+                # Para evitar recursión al actualizar la nota
+                rec.with_context(skip_internal_note_update=True).write({'internal_note': nueva_nota})
+        
+        return resultado
 
     @api.model
     def create(self, vals):
-        rec = super(SaleSubscription, self).create(vals)
-        new_note = rec._update_internal_note_with_facturacion()
-        rec.with_context(skip_internal_note_update=True).write({'internal_note': new_note})
+        """
+        Sobrescribe el método create para actualizar la nota interna al crear un nuevo registro.
+        """
+        rec = super(SuscripcionVenta, self).create(vals)
+        nueva_nota = rec._actualizar_nota_interna_con_facturacion()
+        rec.with_context(skip_internal_note_update=True).write({'internal_note': nueva_nota})
         return rec
-
-
-
-
-
-
-
