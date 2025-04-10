@@ -6,9 +6,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_subscription.sale_subscription_order_view_form"/>
         <field name="arch" type="xml">
-            <!-- Ubica el nuevo campo después del campo sale_order_template_id -->
+            <!-- Ubica los campos después de la plantilla -->
             <xpath expr="//field[@name='sale_order_template_id']" position="after">
                 <field name="incluir_temporalidad" widget="boolean_toggle"/>
+                <field name="nota_manual"/>
+                <field name="internal_note"/>
             </xpath>
         </field>
     </record>

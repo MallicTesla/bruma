@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Período de facturación en descripción",
+    'name': 'Periodo Facturación - Descripción simplificada',
 
-    'summary': "Incluye en la descripción de la suscripción el nombre de la Plantilla de cotización y el Plan recurrente.",
+    'summary': 'Evita que el plazo de la suscripción se agregue a la descripción de la factura.',
 
     'description': """
 Este módulo añade un campo booleano en el plan de suscripción que, de estar activo,
@@ -12,15 +12,15 @@ Por ejemplo: "Plan Básico - Mensualmente".
     """,
 
     'version': '17.0.1.0.0',
-    'category': 'Ventas',
+    'category': 'Accounting',
     'author': 'PrimateUY',
     'website': 'https://primate.uy',
 
 
-    'depends': ['sale', 'sale_subscription',],
+    'depends': ['sale', 'account'],
 
     'data': [
-        'views/sale_subscription_view.xml',
+        # 'views/sale_subscription_view.xml',
     ],
 
     'installable': True,
