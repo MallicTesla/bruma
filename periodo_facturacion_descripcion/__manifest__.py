@@ -20,7 +20,7 @@ Por ejemplo: "Plan Básico - Mensualmente".
     'depends': ['sale', 'account'],
 
     'data': [
-        # 'views/sale_subscription_view.xml',
+        'views/product_template_view.xml',
     ],
 
     'installable': True,
