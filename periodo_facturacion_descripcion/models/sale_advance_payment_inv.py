@@ -1,18 +1,14 @@
-import logging
 from odoo import models
-
-_logger = logging.getLogger(__name__)
 
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = 'sale.advance.payment.inv'
 
     def create_invoices(self):
-        _logger.info("000000000000 Custom override of create_invoices called")
+        # Se llama al método original y se guarda el resultado
         res = super(SaleAdvancePaymentInv, self).create_invoices()
         
         # Si el resultado no es del tipo esperado, se retorna sin modificaciones.
         if isinstance(res, str):
-            _logger.info("1111111111111 El resultado de create_invoices es un string, sin modificaciones.")
             return res
         
         invoices = None
@@ -36,10 +32,4 @@ class SaleAdvancePaymentInv(models.TransientModel):
                         # Si existe el plan y está activado el checkbox, se reestablece la descripción
                         if plan and getattr(plan, 'usar_descripcion_cotizacion', False):
                             original_description = sale_line.name or ''
-                            _logger.info("22222222222 Resetting invoice line description: SaleOrderLine id: %s", sale_line.id)
                             line.write({'name': original_description})
-        else:
-            _logger.info("3333333333333333 No se pudo determinar un recordset de facturas a partir del resultado de create_invoices.")
-        
-        return res
-
