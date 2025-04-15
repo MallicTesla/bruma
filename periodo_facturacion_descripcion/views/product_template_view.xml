@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="view_product_template_inherit_limpieza" model="ir.ui.view">
         <field name="name">product.template.form.inherit.limpieza</field>
@@ -6,9 +5,13 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
-                <field name="limpiar_lineas_factura"/>
+                <span class="d-inline-block mr-2">
+                    <field name="limpiar_lineas_factura" widget="boolean"/>
+                    <label class="o_form_label" for="limpiar_lineas_factura">
+                        Limpiar líneas de factura
+                    </label>
+                </span>
             </xpath>
         </field>
     </record>
 </odoo>
-
