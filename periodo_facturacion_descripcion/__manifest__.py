@@ -14,6 +14,7 @@
     'category': 'Accounting',
     'author': 'PrimateUY',
     'website': 'https://primate.uy',
+    'license': 'LGPL-3',
 
 
     'depends': ['sale', 'account', 'sale_subscription'],
