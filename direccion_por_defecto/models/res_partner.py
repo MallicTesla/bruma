@@ -72,16 +72,16 @@ class ResPartner(models.Model):
 
             # Construir dict de actualización
             valores = {
-                'name':        nombre_fantasia or denominacion or partner.name,
+                'name':          nombre_fantasia or denominacion or partner.name,
                 'social_reason': denominacion or partner.social_reason,
-                'is_company':  True,
-                'vat':         partner.vat,
-                'street':      calle,
-                'street2':     numero,
-                'city_id':     city_id.id if city_id else False,
-                'state_id':    state_id.id if state_id else False,
-                'zip':         codigo,
-                'country_id':  self.env.company.country_id.id,
+                'is_company':    True,
+                'vat':           partner.vat,
+                'street':        calle,
+                'street2':       numero,
+                'city_id':       city_id.id    if city_id  else False,
+                'state_id':      state_id.id   if state_id else False,
+                'zip':           codigo,
+                'country_id':    self.env.company.country_id.id,
             }
 
             # Procesar contactos de forma robusta
@@ -93,10 +93,9 @@ class ResPartner(models.Model):
                     contactos = [raw]
                 elif isinstance(raw, list):
                     contactos = raw
-            # Si contactos_node es otro tipo o no existe, dejamos lista vacía
 
             for c in contactos:
-                tipo = c.get('TipoCtt_Id')
+                tipo  = c.get('TipoCtt_Id')
                 valor = c.get('DomCtt_Val')
                 if tipo == '6':      # móvil
                     valores['mobile'] = valor
@@ -108,7 +107,7 @@ class ResPartner(models.Model):
             # Actualizar el partner
             partner.update(valores)
 
-            # Post en chatter para seguimiento
+            # Post en chatter
             if partner._origin:
                 partner._origin.message_post(
                     subject='Datos actualizados desde DGI',
@@ -116,5 +115,3 @@ class ResPartner(models.Model):
                     message_type='comment'
                 )
         return True
-
-
