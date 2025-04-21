@@ -15,7 +15,6 @@
         'l10n_uy_vat_query',
     ],
     'data': [
-        'views/res_partner_xml_result_view.xml',
         'views/res_company_cfe_view.xml',
     ],
     'installable': True,
