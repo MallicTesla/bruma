@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-import logging
 import xmltodict
 import requests
 
 from odoo import models, fields
 from odoo.exceptions import ValidationError
-
-_logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -18,17 +15,12 @@ class ResPartner(models.Model):
         """Realiza la consulta al servicio DGI e imprime la URL y la respuesta cruda."""
         api_url = self.get_param('api_server_url')
         url = f"{api_url}/?vat={self.vat}"
-        _logger.info("Consultando RUT: %s", url)
-        print(f"Consultando RUT: {url}")
 
         response = requests.post(url)
         if response.status_code != 200:
             raise ValidationError('Error al consultar el RUC')
 
-        # Guardar y mostrar el XML crudo
         self.xml_result = response.text
-        _logger.info("Respuesta cruda DGI para %s: %s", self.vat, response.text)
-        print(f"Respuesta cruda DGI para {self.vat}:\n{response.text}")
 
         return self.load_dgi_data(response.text)
 
@@ -97,11 +89,11 @@ class ResPartner(models.Model):
             for c in contactos:
                 tipo  = c.get('TipoCtt_Id')
                 valor = c.get('DomCtt_Val')
-                if tipo == '6':      # móvil
+                if tipo == '6':
                     valores['mobile'] = valor
-                elif tipo == '1':    # correo electrónico
+                elif tipo == '1':
                     valores['email'] = valor
-                elif tipo == '5':    # teléfono fijo
+                elif tipo == '5':
                     valores['phone'] = valor
 
             # Actualizar el partner

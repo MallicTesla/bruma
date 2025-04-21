@@ -11,10 +11,6 @@ class ResCompany(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id_direccion_por_defecto(self):
-        """
-        Al cambiar la empresa, si el partner tiene street, lo copia;
-        si no, deja el campo vacío ('' por defecto).
-        """
         for comp in self:
             if comp.partner_id and comp.partner_id.street:
                 comp.direccion_por_defecto = comp.partner_id.street
