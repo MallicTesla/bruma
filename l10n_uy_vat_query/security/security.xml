@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record model="res.groups" id="view_partner_result_page">
+            <field name="name">Ver página de resultado de consulta RUT</field>
+        </record>
+
+
+    </data>
+</odoo>

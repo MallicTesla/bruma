@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+
+        <record id="l10n_uy_partner_dgi_partner_form_view" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="500"/>
+            <field name="inherit_id" ref="l10n_uy_einvoice_base.view_partner_inherited_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='l10n_latam_identification_type_id_group']" position="inside">
+                    <label for="consulta_rut" string="Consultar RUT" class="btn btn-sm btn-primary" />
+                    <field name="consulta_rut" nolabel="1"/>
+                </xpath>
+                <xpath expr="//notebook/page[last()]" position="after">
+                    <page string="Datos DGI" groups="base.group_no_one, l10n_uy_vat_query.view_partner_result_page">
+                        <group>
+                            <field name="xml_result"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
